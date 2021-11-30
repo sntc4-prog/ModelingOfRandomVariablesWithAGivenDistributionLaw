@@ -8,17 +8,35 @@ public class Main {
         программы в трех различных режимах. Для оценки качества генераторов сгенерировать
         числовые выборки и на их основе построить соответствующие гистограммы, которые
         включить в отчет.*/
-        double x = 0.57; //от 0 до N − 1
-        int N = 5;
-        double U;
+
         //Моделирование случайной величины, равномерно распределенной на отрезке [0,1)
-        U = x / N;
+        double U = getU(0.57, 5);
         System.out.println("Случайная величина равномерно распределенная на отрезке [0,1): " + U);
+
         //Показательное распределение
         double l = 1;//lyambda>0
-        double raspred = 1 - Math.pow(Math.E, -x / l);
-        System.out.println("Показательное распределение: "+raspred);
-        //Нормальное распределение
+        double IndicativeDistribution = -l * Math.log10(U);
+        System.out.println("Показательное распределение: " + IndicativeDistribution);
 
+        //Нормальное распределение
+        double U1 = 0.37;
+        double U2 = 0.48;
+        double V1 = 2 * U1 - 1;
+        double V2 = 2 * U2 - 1;
+        double S = Math.pow(V1, 2) + Math.pow(V2, 2);
+        double x1 = 0;
+        double x2 = 0;
+        if (S < 1) {
+            double sqrt = Math.sqrt((-2 * Math.log10(S)) / S);
+            x1 = V1 * sqrt;
+        }
+        System.out.println("Нормальное распределение: " + x1);
+    }
+
+    private static double getU(double x, int N) {
+        double U;
+        //x = от 0 до N − 1
+        U = x / N;
+        return U;
     }
 }
