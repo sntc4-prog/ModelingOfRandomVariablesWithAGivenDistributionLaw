@@ -1,3 +1,6 @@
+import java.util.Random;
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
         /*Программно реализовать три генератора случайных величин:
@@ -9,34 +12,57 @@ public class Main {
         числовые выборки и на их основе построить соответствующие гистограммы, которые
         включить в отчет.*/
 
-        //Моделирование случайной величины, равномерно распределенной на отрезке [0,1)
-        double U = getU(0.57, 5);
-        System.out.println("Случайная величина равномерно распределенная на отрезке [0,1): " + U);
+        System.out.println("""
+                1. равномерно распределенной на отрезке [0, 1];
+                2. показательно распределенной с параметром λ > 0;
+                3. нормально распределенной с параметрами a и σ > 0.""");
+        int q;
+        Scanner in = new Scanner(System.in);
+        q = in.nextInt();
+        switch (q) {
+            case (1):
+                //Моделирование случайной величины, равномерно распределенной на отрезке [0,1)
+                double U = getU();
+                break;
+            case (2):
+                //Показательное распределение
+                double l = 1;//lyambda>0
+                double indicativeDistribution = -l * Math.log(getU());
+                System.out.println("[0;+infinity] Показательное распределение: " + indicativeDistribution);
+                break;
+            case (3):
+                //Нормальное распределение
+                System.out.println("(0,1) (a=0, sigma = 1) Нормальное распределение: " + normalDistribution());
 
-        //Показательное распределение
-        double l = 1;//lyambda>0
-        double IndicativeDistribution = -l * Math.log10(U);
-        System.out.println("Показательное распределение: " + IndicativeDistribution);
-
-        //Нормальное распределение
-        double U1 = 0.37;
-        double U2 = 0.48;
-        double V1 = 2 * U1 - 1;
-        double V2 = 2 * U2 - 1;
-        double S = Math.pow(V1, 2) + Math.pow(V2, 2);
-        double x1 = 0;
-        double x2 = 0;
-        if (S < 1) {
-            double sqrt = Math.sqrt((-2 * Math.log10(S)) / S);
-            x1 = V1 * sqrt;
+                System.out.println("(0,1) (a=1, sigma = 1) Произвольное нормальное распределение: ");
+                break;
         }
-        System.out.println("Нормальное распределение: " + x1);
     }
 
-    private static double getU(double x, int N) {
-        double U;
-        //x = от 0 до N − 1
-        U = x / N;
+    private static double normalDistribution() {
+        double v1, v2, s, x1;
+        do {
+            v1 = 2 * getU() - 1;
+            v2 = 2 * getU() - 1;
+            s = v1 * v1 + v2 * v2;
+        } while (s >= 1 || s == 0);
+        double sqrt = Math.sqrt((-2 * Math.log(s)) / s);
+        x1 = v2 * sqrt;
+        return x1;
+    }
+
+    private static double arbitaryNormalDistribution(double x) {
+        double sigma = 2;
+        double a = 2;
+        return sigma * x + a;
+    }
+
+
+    private static double getU() {
+        double rand = Math.random();//Возвращает [0,1)
+        double N = 1;
+        double U = rand / N;
+        System.out.println("[0,1) Случайная величина равномерно распределенная на отрезке: " + U);
         return U;
     }
 }
